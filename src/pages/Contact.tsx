@@ -4,6 +4,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { 
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion';
 import { toast } from 'sonner';
 import {
   MapPin,
@@ -11,6 +17,9 @@ import {
   Mail,
   Clock,
   Send,
+  AlertTriangle,
+  HelpCircle,
+  ChevronDown,
 } from 'lucide-react';
 
 const Contact: React.FC = () => {
@@ -68,6 +77,53 @@ const Contact: React.FC = () => {
       details: ['Monday - Friday: 8:00 AM - 8:00 PM', 'Saturday: 9:00 AM - 5:00 PM', 'Sunday: 10:00 AM - 4:00 PM'],
     },
   ];
+
+  const faqData = [
+    {
+      question: "How do I book an appointment?",
+      answer: "You can book an appointment by browsing our doctors page, selecting a doctor, and clicking 'Book Appointment'. Choose your preferred date and time from the available slots."
+    },
+    {
+      question: "Can I cancel or reschedule my appointment?",
+      answer: "Yes, you can cancel your appointment from your profile page. For rescheduling, please cancel your current appointment and book a new one with your preferred time."
+    },
+    {
+      question: "What if I'm running late for my appointment?",
+      answer: "Please call us immediately if you're running late. We'll do our best to accommodate you, but appointments may need to be rescheduled if you're more than 15 minutes late."
+    },
+    {
+      question: "Do you accept insurance?",
+      answer: "We accept most major insurance plans. Please contact our office to verify if your specific insurance is accepted before your appointment."
+    },
+    {
+      question: "What should I bring to my appointment?",
+      answer: "Please bring a valid ID, your insurance card, a list of current medications, and any relevant medical records or test results."
+    },
+    {
+      question: "Can I get prescription refills online?",
+      answer: "Prescription refills require a consultation with your doctor. Please book a follow-up appointment or contact our office to discuss prescription renewals."
+    },
+    {
+      question: "What are your emergency contact procedures?",
+      answer: "For life-threatening emergencies, call 911 immediately. For urgent medical questions during business hours, call our main number. After hours, visit your nearest emergency room."
+    },
+    {
+      question: "How do I access my medical records?",
+      answer: "You can request your medical records by contacting our office. We provide records within 30 days of your request. Some records may be available through our patient portal."
+    }
+  ];
+
+  const handleEmergencyCall = () => {
+    if (confirm('This will dial emergency services (911). Continue?')) {
+      window.location.href = 'tel:911';
+      toast.error('Emergency call initiated. Stay on the line with the operator.');
+    }
+  };
+
+  const handlePhoneCall = (number: string) => {
+    window.location.href = `tel:${number}`;
+    toast.success(`Calling ${number}...`);
+  };
 
   return (
     <div className="py-8">
@@ -200,29 +256,71 @@ const Contact: React.FC = () => {
                   If you're experiencing a medical emergency, please call 911
                   immediately or visit your nearest emergency room.
                 </p>
-                <Button variant="destructive" className="w-full">
-                  <Phone className="h-4 w-4 mr-2" />
+                <Button 
+                  variant="destructive" 
+                  className="w-full hover-scale"
+                  onClick={handleEmergencyCall}
+                >
+                  <AlertTriangle className="h-4 w-4 mr-2" />
                   Call Emergency: 911
                 </Button>
               </CardContent>
             </Card>
 
-            {/* FAQ Link */}
+            {/* Quick Call Actions */}
             <Card>
-              <CardContent className="p-6 text-center">
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                  Frequently Asked Questions
-                </h3>
-                <p className="text-gray-600 mb-4">
-                  Find answers to common questions about our services,
-                  appointments, and more.
-                </p>
-                <Button variant="outline" className="w-full">
-                  View FAQ
+              <CardHeader>
+                <CardTitle>Quick Contact</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start hover-scale"
+                  onClick={() => handlePhoneCall('+15551234567')}
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Call Main Line: +1 (555) 123-4567
+                </Button>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start hover-scale"
+                  onClick={() => handlePhoneCall('+15551234568')}
+                >
+                  <Phone className="h-4 w-4 mr-2" />
+                  Emergency Line: +1 (555) 123-4568
                 </Button>
               </CardContent>
             </Card>
           </div>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="mt-16">
+          <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="flex items-center justify-center gap-2">
+                <HelpCircle className="h-6 w-6" />
+                Frequently Asked Questions
+              </CardTitle>
+              <p className="text-gray-600">
+                Find quick answers to common questions about our services
+              </p>
+            </CardHeader>
+            <CardContent>
+              <Accordion type="single" collapsible className="w-full">
+                {faqData.map((faq, index) => (
+                  <AccordionItem key={index} value={`item-${index}`} className="animate-fade-in">
+                    <AccordionTrigger className="text-left hover:text-primary">
+                      {faq.question}
+                    </AccordionTrigger>
+                    <AccordionContent className="text-gray-600 leading-relaxed">
+                      {faq.answer}
+                    </AccordionContent>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Map Section */}
