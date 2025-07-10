@@ -72,6 +72,7 @@ const DoctorProfile: React.FC = () => {
       doctorName: doctor.name,
       date: format(selectedDate, 'yyyy-MM-dd'),
       time: selectedTime,
+      status: 'scheduled' as const,
     };
 
     bookAppointment(appointmentData);
